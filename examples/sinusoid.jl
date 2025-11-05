@@ -44,10 +44,10 @@ function setup_linear_system(σ::Float64)
     return K,F
 end
 
-TEST = false
+TEST = true
 if TEST
     K, F = setup_linear_system(0.1)
-    x, history = bicgstabl(K, F, 2; reltol=1e-8, verbose=true, maxiter=1_000, log=true)
+    x, history = gmres(K + 1e-8*I, F; reltol=1e-8, verbose=true, maxiter=1_000, log=true)
     figure1 = plot(history, yaxis=:log10)
     quantile(history.data[:resnorm], [0.25, 0.50,  0.75, 1.0])
 end
