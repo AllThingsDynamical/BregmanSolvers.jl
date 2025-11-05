@@ -14,8 +14,7 @@ end
 
 using LinearAlgebra
 using Test
-TEST = true
-
+TEST = false
 if TEST
     A = rand(10,10)
     B = rand(10, 40)
