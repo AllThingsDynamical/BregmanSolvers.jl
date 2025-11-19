@@ -30,7 +30,7 @@ function setup_linear_system(σ::Float64)
     ul = (float(π), float(π))
     f(x, y) = sin(x)*sin(y) + sin(4*x)*sin(4*y)
 
-    N_input_points = 10_000
+    N_input_points = 5_000
     input_points = QuasiMonteCarlo.sample(N_input_points, ll, ul, QuasiMonteCarlo.HaltonSample())
     output_points = zeros(1, N_input_points)
     for i=1:N_input_points
@@ -44,7 +44,7 @@ function setup_linear_system(σ::Float64)
     return K,F
 end
 
-TEST = true
+TEST = false
 if TEST
     K, F = setup_linear_system(0.1)
     x, history = gmres(K + 1e-8*I, F; reltol=1e-8, verbose=true, maxiter=1_000, log=true)

@@ -5,12 +5,30 @@ struct GradientFlow{FT, ST}
     vf::Any
     
     function GradientFlow(A::Matrix, B::T, P::Matrix) where {T}
-        vf = function(X::Union{Matrix, Vector})
+        vf = function(X::Union{Matrix, Vector}, t::Any=1.0)
             P*B - P*A*X
         end
+
         new{eltype(A), typeof(B)}(A, B, P, vf)
     end
 end
+
+struct NesterovFlow{FT, ST}
+    A::Matrix{FT}
+    B::ST
+    P::Matrix{FT}
+    vf::Any
+
+    function NesterovFlow(A::Matrix, B::T, P::Matrix) where {T}
+        vf = function(Y::Union{Matrix, Vector}, t::Any)
+            n = Int(size(Y,1)/2)
+            vcat(Y[n+1:end,:], -(3/t)*Y[1:n,:] + P*B - P*A*Y[1:n,:])
+        end
+
+        new{eltype(A), typeof(B)}(A, B, P, vf)
+    end
+end
+
 
 using LinearAlgebra
 using Test
