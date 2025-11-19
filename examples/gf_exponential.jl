@@ -32,6 +32,11 @@ begin
     end
 end 
 
+using RandomizedLinAlg
+using LinearAlgebra
+using TSVD
+
+r = 800
 B = P*K
 U, S = svd(B)
 
@@ -41,10 +46,8 @@ begin
     norm(vf(B_inv*P*F))
 end
 
-
 begin
-    r = 500
-    dt = 10_000
+    dt = 100_000
     Σr = diagm(S[1:r])
     diag(exp(-Σr*dt))
     inv(Σr)
