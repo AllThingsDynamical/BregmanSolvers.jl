@@ -1,95 +1,6 @@
-using Plots
-using LaTeXStrings
+include("custom_plots.jl")
 using LinearAlgebra
 
-begin
-# Global publication theme
-default(
-    fontfamily = "Computer Modern",
-    linewidth = 2.2,
-    markersize = 2,
-    legendfontsize = 11,
-    guidefontsize = 13,
-    tickfontsize = 11,
-    titlefontsize = 14,
-    framestyle = :box,
-    grid = false,
-    minorgrid = false,
-    tickdirection = :out,
-    foreground_color_border = :black,
-    foreground_color_axis = :black,
-    foreground_color_text = :black,
-    background_color = :white,
-    size = (720, 480),
-    dpi = 300
-)
-
-# Consistent color cycle (colorblind-safe, print-friendly)
-const PUB_COLORS = [
-    RGB(0.0, 0.2, 0.6),   # deep blue
-    RGB(0.8, 0.2, 0.2),   # red
-    RGB(0.2, 0.6, 0.2),   # green
-    RGB(0.6, 0.4, 0.0),   # ochre
-    RGB(0.4, 0.2, 0.6)    # purple
-]
-palette(PUB_COLORS)
-
-# Convenience wrapper for axis labels (LaTeX by default)
-xlabel!(s) = xlabel!(L"$s$")
-ylabel!(s) = ylabel!(L"$s$")
-end
-
-TEST = false
-VIS = false
-
-if TEST # Parameters
-    ndims = 2
-    xmin = -π
-    xmax = π
-    ymin = -π
-    ymax = π
-    f = (x,y) -> 2*(sin(x)*sin(y) + 16*sin(4x)*sin(4y))
-    u_func = (x,y) -> sin(x)*sin(y) + sin(4x)*sin(4y) 
-    N = 100
-end
-
-if TEST
-    x = LinRange(xmin, xmax, N)
-    y = LinRange(ymin, ymax, N)
-    F = zeros(N, N)
-    for (i,xi) in enumerate(x)
-        for (j,yi) in enumerate(y)
-            F[i,j] = f(xi, yi)
-        end
-    end
-
-    b = vec(F)
-
-    dx = x[2]-x[1]
-    L1 = (1/dx^2)*diagm(0=> -2*ones(N), 1=> ones(N-1), -1=>ones(N-1))
-    L2 = kron(L1, I(N)) + kron(I(N), L1)
-
-    A = -L2
-end
-
-# Direct solve
-if TEST
-    x_sol = A \ b
-    u = reshape(x_sol, N, N)
-end
-
-# Visualization and comparison
-if TEST
-    figure1 = heatmap(u, title="Approximate solution")
-    U = zeros(N, N)
-    for (i, xi) in enumerate(x)
-        for (j, yi) in enumerate(y)
-            U[i,j] = u_func(xi, yi)
-        end
-    end
-    figure2 = heatmap(U, title="Analytical solution")
-    figure3 = plot(figure1, figure2)
-end
 
 """
     poisson_problem_2d() -> (A, b)
@@ -128,7 +39,7 @@ so that solving `A * u_vec = b` approximates the Poisson equation.
 - `b::Vector{Float64}`: Right-hand side vector of length `N^2`, formed by sampling
   `f` on the grid and vectorizing in Julia's column-major order (`vec(F)`).
 """
-function poisson_problem_2d()
+function poisson(N::Int)
     # Parameters
     ndims = 2
     xmin = -π
@@ -137,7 +48,6 @@ function poisson_problem_2d()
     ymax = π
     f = (x,y) -> 2*(sin(x)*sin(y) + 16*sin(4x)*sin(4y))
     u_func = (x,y) -> sin(x)*sin(y) + sin(4x)*sin(4y) 
-    N = 100
 
     x = LinRange(xmin, xmax, N)
     y = LinRange(ymin, ymax, N)
@@ -158,11 +68,10 @@ function poisson_problem_2d()
     return A,b
 end
 
-
+VIS = true
 if VIS
-    A, b = poisson_problem_2d()
-    figure1 = heatmap(A, title="A")
-    figure2 = plot(eigvals(A), label=false, xlabel="Index", ylabel="Eigenvalues of A")
-    plot(figure1, figure2, size=(1000, 300))
-    savefig("problems/poisson-2d.png")
+    A, b = poisson(50)
+    figure3 = spy(A, colorbar=false, title="Laplace")
+    display(figure3)
+    savefig("problems/figures/poisson.png")
 end
