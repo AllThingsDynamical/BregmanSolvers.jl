@@ -1,6 +1,6 @@
 include("custom_plots.jl")
 using LinearAlgebra
-VIS = true
+VIS = false
 
 if VIS
     ndims = 2

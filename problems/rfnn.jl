@@ -2,7 +2,7 @@ using LinearAlgebra
 using Plots
 using QuasiMonteCarlo
 include("custom_plots.jl")
-VIS = true
+VIS = false
 
 
 function rosen_brock(x::Vector)
