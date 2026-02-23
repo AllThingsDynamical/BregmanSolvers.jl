@@ -39,7 +39,7 @@ if VIS
     figure3 = heatmap(u_sol)
     plot(figure2, figure3)
 
-    figure4 = spy(A, colorbar=false, title="Modified Helmholtz")
+    figure4 = spy(A, colorbar=true, title="Modified Helmholtz")
     savefig("problems/figures/modified_helmholtz.png")
 end
 

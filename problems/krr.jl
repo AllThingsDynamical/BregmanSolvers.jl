@@ -32,7 +32,7 @@ if VIS
     end
     K
 
-    figure = spy(K, colorbar=false, title="Gram matrix")
+    figure = spy(K, colorbar=true, title="Gram matrix")
     savefig("problems/figures/krr.png")
 end
 
