@@ -68,7 +68,7 @@ function poisson(N::Int)
     return A,b
 end
 
-VIS = true
+VIS = false
 if VIS
     A, b = poisson(50)
     figure3 = spy(A, colorbar=false, title="Laplace")
