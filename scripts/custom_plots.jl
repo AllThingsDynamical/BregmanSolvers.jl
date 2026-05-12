@@ -22,7 +22,8 @@ default(
     size = (720, 480),
     gridlinewidth=2,
     dpi = 300,
-    margin=2mm
+    margin=2mm,
+    legend=:best
 )
 
 # Consistent color cycle (colorblind-safe, print-friendly)

@@ -117,7 +117,7 @@ function visualize_comparison(A, b; phi, k, x0, maxiter=200, rtol=1e-8)
     fig = plot(1:length(res_krylov), res_krylov,
         yaxis=:log, label="Krylov smoother",
         xlabel="# Iterations", ylabel="|Residual|",
-        linewidth=2)
+        linewidth=2, minorgrid=true)
 
     plot!(1:length(res_cg), res_cg,
         label="CG", linewidth=2, linestyle=:dash)
@@ -125,7 +125,7 @@ function visualize_comparison(A, b; phi, k, x0, maxiter=200, rtol=1e-8)
     return fig
 end
 
-Ns = [900, 1600, 2500, 3600, 4900, 6400, 8100]
+Ns = [900, 1600, 2500, 3600, 4900, 6400]
 
 for N in Ns
     n = Int(sqrt(N))
